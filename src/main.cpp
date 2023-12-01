@@ -2,12 +2,11 @@
 #include "./includes/encDec.h"
 #include <iostream>
 
-
 int main(){
 	std::string input;
 	std::string key;
 
-	std::cout << "Enter the main directory: ";
+	std::cout << "Enter the full path of the main directory: ";
 	std::getline(std::cin, input);
 	std::cout << "Enter the key: ";
 	std::getline(std::cin, key);

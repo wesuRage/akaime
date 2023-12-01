@@ -1,2 +1,2 @@
 all:
-	g++ ./src/*.cpp -o ./bin/ransom
+	g++ ./src/*.cpp -o ./bin/akm

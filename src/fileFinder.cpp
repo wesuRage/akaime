@@ -1,31 +1,23 @@
 #include <iostream>
-#include <dirent.h>
 #include <vector>
+#include <filesystem>
 #include "./includes/fileFinder.h"
 
-std::vector<std::string> fileFinder(std::string startDir) {
-	DIR* dir = opendir(startDir.c_str());
+namespace fs = std::filesystem;
 
-	if (!dir) {
-	std::cerr << "Erro ao abrir o diretório." << std::endl;
-		exit(1);
-	}
+std::vector<std::string> fileFinder(const std::string& startDir) {
+    std::vector<std::string> Files;
 
-	struct dirent* entry;
-	std::vector<std::string> Files;
+    try {
+        for (const auto& entry : fs::recursive_directory_iterator(startDir)) {
+            if (entry.is_regular_file()) {
+                Files.push_back(entry.path().string());
+            }
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+    }
 
-	while ((entry = readdir(dir)) != nullptr) {
-		if (entry->d_type == DT_REG) {    
-			std::string result = startDir + "/" + entry->d_name;
-			Files.push_back(result);
-		} else if (entry->d_type == DT_DIR && std::string(entry->d_name) != "." && std::string(entry->d_name) != "..") {
-			std::string result = startDir + "/" + entry->d_name;
-			std::vector<std::string> subFiles = fileFinder(result);
-			Files.insert(Files.end(), subFiles.begin(), subFiles.end());
-		}
-	}
-	
-	closedir(dir);
-	return Files;
+    return Files;
 }
 
